@@ -1,1 +1,1 @@
-for now see the [wiki](https://github.com/VolosHack/presentations/wiki)
+resources will be added here, for now see the [wiki](https://github.com/VolosHack/presentations/wiki)
