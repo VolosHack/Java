@@ -1,0 +1,469 @@
+import javax.swing.*;
+
+public class Main {
+	public static void main (String[] args) {
+		GUI g = new GUI();
+		g.setSize(300, 400);
+		g.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		g.setVisible(true);
+		g.setResizable(false);
+	}
+
+}
+// --------------------------------------------------------------------------------------------------------------------//
+
+import javax.swing.*; // google javaswing
+import java.awt.*;
+import java.awt.event.*;
+
+public class GUI extends JFrame {
+	private JTextField answerfield;
+	private JButton zero, one, two, three, four, five, six, seven, eight, nine, add, sub, multi, divid, equal;
+	private String string_temp1, string_temp2, string_result_field;
+	private double result = 0.0;
+	private String sresult;
+	
+	private boolean equalsClicked = false;
+	private boolean opChosen = false;
+	
+	char operation = ' ';
+	
+	private JPanel ContentPanel;
+	
+	
+	// onomazo tin klasi GUI kathos auto einai :)
+	public GUI () {
+			super ("Calculator");
+			
+			// To answerfield einai i o8oni tou calculator kai edw arxikopoieitai to mege8os tis
+			answerfield = new JTextField(null, 20);
+			// Edw theto oti to pedio auto den einai editable ousiastika diladi einai anti-cheat
+			answerfield.setEditable(false);
+			
+			// Me tin xrisi tou JButton(google it) dimiourgoume buttons
+			// gia kathe ena apo ta apaitoumena parts tou calculator//
+			one = new JButton("1");
+			two = new JButton("2");
+			three = new JButton("3");
+			four = new JButton("4");
+			five = new JButton("5");
+			six = new JButton("6");
+			seven = new JButton("7");
+			eight = new JButton("8");
+			nine = new JButton("9");
+			zero = new JButton("0");
+			add = new JButton("+");
+			sub = new JButton("-");
+			multi = new JButton("*");
+			divid = new JButton("/");
+			equal = new JButton("=");
+			
+			Dimension dimension = new Dimension(75, 25); // Arxikopoiisi megethous buttons//
+			
+			
+			// Edw kanoume set to megethos kathe button na einai 
+			//by default = me to mege8os pou exoume orisei 
+			//san defined Dimension size//
+			one.setPreferredSize(dimension);
+			two.setPreferredSize(dimension);
+			three.setPreferredSize(dimension);
+			four.setPreferredSize(dimension);
+			five.setPreferredSize(dimension);
+			six.setPreferredSize(dimension);
+			seven.setPreferredSize(dimension);
+			eight.setPreferredSize(dimension);
+			nine.setPreferredSize(dimension);
+			zero.setPreferredSize(new Dimension(113, 25));
+			add.setPreferredSize(new Dimension(113, 25));
+			sub.setPreferredSize(new Dimension(113, 25));
+			multi.setPreferredSize(new Dimension(113, 25));
+			divid.setPreferredSize(new Dimension(113, 25));
+			equal.setPreferredSize(new Dimension(225, 25));
+			// Stin periptosi opou thelisoume kapoio apo ta buttons na exei diaforetiko megethos apo ta ypoloipa
+			// i allagi ginetai os eksis 
+			// xxx.setPreferredSize(new Dimension(---, ---);//
+			
+			// Later Step: Edw tha dimiourgisoume duo "action listener classes"//
+			
+			
+			// Xreiazomaste mia klassh i opoia tha xeirizetai tin diadrastikotita "CLICK+BUTTON' = $RESULT$
+			// Diladi tha orizei ta gegonota otan o xristis kanei click se ena Button me ari8mitiko value
+			// Tin orizoume Numbers num = new Numbers();
+			// Isos sxoliastei oti dimiourgoume auti ti stigmi klassi mesa se klassi
+			// Stin Java einai kata merikous  just fine to do it kai kata merikous oxi, ego to kanw :)
+			Numbers num = new Numbers();
+			
+			// Xreiazomaste mia paromoia klassh i opoia tha xeirizetai tin diadrastikotita "CLICK+BUTTON(+,-,*,/,=)" = $RESULT$
+			// H klassh diladi pou tha orizei to function ton arithmitikon prakseon kai tou button=equal
+			// Tin orizoume Calcu calc =new Calcu();
+			
+			// H ylopoiisi tous einai parakato
+			
+			Calcu calc = new Calcu();
+			
+			// Edw dinoume tin odigia ka8e button na sundeetai me tin classi Numbers 
+			// i opoia einai to ActionListener diladi parakolou8ei tin roi
+			// ton entolon kai tin apo8ikeuei
+			
+			//	EXP: Auto to part tou kodika einai kalo na 
+			// diavastei afotou exete koitaksei tin klassi Number
+			// oste na katalavete ti akrivos kanei
+			
+			// Xoris auto to part otan o xristis pataei gia paradeigma
+			// to button X (0 eos 9)
+			// O arithmos pou tha dimiourgousame me ta ekastote strings
+			// tha apothikeuotane sta temporary strings pou exoume
+			// alla den tha itan oratos sto field 
+			// GIATI?
+			// ANSWER: Stin klassi Numbers pou einai actionListener exoume dimiourgisei 
+			// to plaisio tou functionability gia to ti ginetai otan pati8ei ena button
+			// ALLA ta buttons den einai sundedemena me to ActionListener
+			// Kai gia na to kanoume xrisimipoioume to xxx.addActionListener(num);
+			one.addActionListener(num);two.addActionListener(num);three.addActionListener(num);
+			four.addActionListener(num);five.addActionListener(num);six.addActionListener(num);
+			seven.addActionListener(num);eight.addActionListener(num);nine.addActionListener(num);
+			zero.addActionListener(num);
+			
+			add.addActionListener(calc);sub.addActionListener(calc);multi.addActionListener(calc);divid.addActionListener(calc);
+			equal.addActionListener(calc);
+			
+			
+			// To content Panel einai ousiastika to "board" GUI 
+			// sto opoio "emfolevoume" ta buttons/fields etc 
+			// PS: to Functionabillity den ginetai edw, alla einai 
+			// "linked" 
+			ContentPanel = new JPanel();
+			ContentPanel.setBackground(Color.BLACK);
+			ContentPanel.setLayout(new FlowLayout());
+			
+			ContentPanel.add(answerfield, BorderLayout.NORTH);
+			
+			// Ta Buttons exoun dimiourgi8ei alla den emfanizontai mexri
+			// stigmis, apla yparxoun
+			// Gia na einai dunati i emfanisi tous ta "topothetoume" 
+			// Sto ContentPanel pou einai to "board//
+			ContentPanel.add(one);ContentPanel.add(two);ContentPanel.add(three);
+			ContentPanel.add(four);ContentPanel.add(five);ContentPanel.add(six);
+			ContentPanel.add(seven);ContentPanel.add(eight);ContentPanel.add(nine);
+			ContentPanel.add(zero);ContentPanel.add(add);ContentPanel.add(sub);
+			ContentPanel.add(multi);ContentPanel.add(divid);ContentPanel.add(equal);
+
+			
+			
+			this.setContentPane(ContentPanel); // Edw to this orizei oti ta parapanw button aforoun to object ContentPanel
+	}
+	
+	private class Numbers implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			JButton src =(JButton) event.getSource();
+			
+			// To source gia to button ONE
+			// 
+			//	Edw xreiazetai ligi prosoxi gia na ginei antilipto to function pou ekteleitai
+			//
+			//	Leitourgia: Otan o xristis patisei to Button = 1(to opoio einai sto ContentPanel) !!!XORIS NA EPILEKSEI ARGOTERA PRAKSH!!!
+			// 	To temporary string string_temp1 "krataei" tin timi 1 (an o xristis patisei duo fores to button 1 to string_temp1 = 11)
+			if (src.equals(one)) {
+				if (opChosen == false){
+					if(string_temp1 == null) { // Exp: Exoume arxikopoiisei oti to string_temp1 = null ara patontas to Button1 !!PROTH FORA CLICK!!!
+						string_temp1 = "1";	   // Exp: Pleon apo string_temp1 = null -----> string_temp1 = 1
+					}else {
+						string_temp1 = string_temp1 + "1";	// Exp: To value tou string_temp1 != null diladi den einai i proti fora pou ginetai click
+					}										// Exp: Ara sto proigumeno value tou string_temp1(pou einai = x) prosti8etai sto telos akoma
+				}else {										// Exp: ena psifio 1 
+					if(string_temp2 == null) {
+						string_temp2 = "1";
+					}else {
+						string_temp2 = string_temp2 + "1";
+					}
+				}
+			}
+			
+			// To source gia to button TWO//
+			if (src.equals(two)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "2";
+					}else {
+						string_temp1 = string_temp1 + "2";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "2";
+					}else {
+						string_temp2 = string_temp2 + "2";
+					}
+				}
+			}
+			
+			// To source gia to button THREE//
+			if (src.equals(three)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "3";
+					}else {
+						string_temp1 = string_temp1 + "3";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "3";
+					}else {
+						string_temp2 = string_temp2 + "3";
+					}
+				}
+			}
+			
+			// To source gia to button FOUR//
+			if (src.equals(four)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "4";
+					}else {
+						string_temp1 = string_temp1 + "4";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "4";
+					}else {
+						string_temp2 = string_temp2 + "4";
+					}
+				}
+			}
+			
+			// To source gia to button FIVE//
+			if (src.equals(five)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "5";
+					}else {
+						string_temp1 = string_temp1 + "5";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "5";
+					}else {
+						string_temp2 = string_temp2 + "5";
+					}
+				}
+			}
+			
+			// To source gia to button SIX//
+			if (src.equals(six)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "6";
+					}else {
+						string_temp1 = string_temp1 + "6";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "6";
+					}else {
+						string_temp2 = string_temp2 + "6";
+					}
+				}
+			}
+			
+			// To source gia to button SEVEN//
+			if (src.equals(seven)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "7";
+					}else {
+						string_temp1 = string_temp1 + "7";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "7";
+					}else {
+						string_temp2 = string_temp2 + "7";
+					}
+				}
+			}
+			
+			// To source gia to button EIGHT//
+			if (src.equals(eight)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "8";
+					}else {
+						string_temp1 = string_temp1 + "8";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "8";
+					}else {
+						string_temp2 = string_temp2 + "8";
+					}
+				}
+			}
+			
+			// To source gia to button NINE//
+			if (src.equals(nine)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "9";
+					}else {
+						string_temp1 = string_temp1 + "9";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "9";
+					}else {
+						string_temp2 = string_temp2 + "9";
+					}
+				}
+			}
+			
+			// To source gia to button ZERO//
+			if (src.equals(zero)) {
+				if (opChosen == false){
+					if(string_temp1 == null) {
+						string_temp1 = "0";
+					}else {
+						string_temp1 = string_temp1 + "0";
+					}
+				}else {
+					if(string_temp2 == null) {
+						string_temp2 = "0";
+					}else {
+						string_temp2 = string_temp2 + "0";
+					}
+				}
+			}
+			
+			if (equalsClicked == false) {
+				if (opChosen == false){
+					answerfield.setText(string_temp1);
+				}else{
+					answerfield.setText(string_temp2);
+				}
+				}
+			
+			//if(opChosen == false) {					// Mhn dwsete simasia se auto to simeio to eixa san voi8itiko
+				//answerfield.setText(string_temp1);
+			//}else{
+				//answerfield.setText(string_temp2);
+			//}//
+			
+		}
+	}
+
+	
+	private class Calcu implements ActionListener{
+		public void actionPerformed(ActionEvent event) {
+			JButton src =(JButton) event.getSource();
+
+			
+			
+			// Edw orizoume to function tou ka8e button//
+			// src.equals(add) = oti o xristis exei patisei to button me to sumbolo tis pros8esis
+			// Pros8etoume enan sxetiko elegxo stin leitourgia o opoios 
+			// emfanizei (stin consola OXI sto GUI) mimina lathous
+			// kai epitrepei tin telesi MONO mias praksis ti fora
+			if (src.equals(add)){
+				if(string_temp1==null){
+					System.out.println("You have to enter a number first!");
+				}else
+					if(string_temp1 != null && string_temp2 == null){
+						opChosen = true;
+						operation = '+';
+					}else
+						if (string_temp1 != null && string_temp2 != null){
+							System.out.println("You can have two operations at a time!");
+						}
+			}
+			// Epanalipsi tis akrivos proigoumenis diadikasias gia tin afairesi//
+			if (src.equals(sub)){
+				if(string_temp1==null){
+					System.out.println("You have to enter a number first!");
+				}else
+					if(string_temp1 != null && string_temp2 == null){
+						opChosen = true;
+						operation = '-';
+					}else
+						if (string_temp1 != null && string_temp2 != null){
+							System.out.println("You can have two operations at a time!");
+						}
+			}
+			// Epanalipsi tis akrivos proigoumenis diadikasias gia ton pollaplasiasmo//
+			if (src.equals(multi)){
+				if(string_temp1==null){
+					System.out.println("You have to enter a number first!");
+				}else
+					if(string_temp1 != null && string_temp2 == null){
+						opChosen = true;
+						operation = '*';
+					}else
+						if (string_temp1 != null && string_temp2 != null){
+							System.out.println("You can have two operations at a time!");
+						}
+			}
+			// Epanalipsi tis akrivos proigoumenis diadikasias gia tin diairesi//
+			if (src.equals(divid)){
+				if(string_temp1==null){
+					System.out.println("You have to enter a number first!");
+				}else
+					if(string_temp1 != null && string_temp2 == null){
+						opChosen = true;
+						operation = '/';
+					}else
+						if (string_temp1 != null && string_temp2 != null){
+							System.out.println("You can have two operations at a time!");
+						}
+			}
+			// Idia akrivos diadikasia kai gia to equals//
+			if (src.equals(equal)){
+				if(string_temp1==null){
+					System.out.println("You have to enter a number first!");
+				}else
+					if(string_temp1 != null && string_temp2 == null){
+						System.out.println("You can have two operations at a time!");
+						
+					}
+				if (string_temp1 != null && string_temp2 != null) {
+					double temp1 = 0.0, temp2 = 0.0;				// Edw kanw declare duo metavlites me tis opoies tha ektelountai oi prakseis
+																	                // Tis exw double giati argotera tha proste8ei dunatotita gia dekadikous arithmous
+					
+					
+					temp1 = Double.parseDouble(string_temp1);		// Edw gia na peraso tin timi arithmou(double) se string xrisimopoio tin metatropi parseDouble
+					temp2 = Double.parseDouble(string_temp2);		// krataei tin timi tis doulbe metavlitis kai tin metatrepei se string giati to output pou dinoume
+																	                      // ston xristi edo einai string
+					
+					// Edw nomizw den xreiazetai na eipo8ei kati
+					//ena aplo switch gia tin telesi ton prakseon 
+					switch(operation){
+					case '+':
+						result = temp1 + temp2;
+						break;
+					case '-':
+						result = temp1 - temp2;
+						break;
+					case '*':
+						result = temp1 * temp2;
+						break;
+					case '/':
+						result = temp1 / temp2;
+						break;
+					}
+					
+					sresult = Double.toString(result);	//Metatropi tou apotelesmatos apo double se string format, google it
+					answerfield.setText(sresult);		//Edw pernaw to apotelesma tis praksis sto result field tou GUI
+					
+					if(operation =='/' && temp2 ==0.0){
+						answerfield.setText("DIVIDE BY ZERO LEAD TO ERROR!");
+					}
+					}
+					}
+			}
+					
+		}
+	}
+
+	
+		
+
+
+
+
+
