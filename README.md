@@ -1,1 +1,3 @@
-Δες το [wiki](https://github.com/VolosHack/Java/wiki) της ομάδας.
+Κώδικας που έχουμε γράψει κατά τη διάρκεια και μεταξύ των workshop των συναντήσεών μας.
+
+Κάποιες πληροφορίες για την Java θα βρεις στο [wiki](https://github.com/VolosHack/Java/wiki) της ομάδας.
